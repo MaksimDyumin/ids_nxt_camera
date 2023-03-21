@@ -1,0 +1,35 @@
+{
+  "APIVersion": [
+    "2.0.0",
+    "2.1.0",
+    "2.2.0",
+    "2.3.0",
+    "2.4.0",
+    "2.6.0",
+    "2.7.0",
+    "3.0.0"
+  ],
+  "Installed": [
+    "anomalydetector",
+    "classifier",
+    "cnnmanager",
+    "cnnminimal",
+    "crawler",
+    "customimagetest",
+    "facedetect",
+    "filetransferandwebsite",
+    "gpiogateway",
+    "grayvalue",
+    "labelverifier",
+    "lhb_blockly_im_b0_1101",
+    "multicnn",
+    "nxtblockly",
+    "objectdetector",
+    "persondetector",
+    "rs232gateway",
+    "ur_eyebot",
+    "ur_plates_test"
+  ],
+  "MaxConcurrent": 100,
+  "Queued": []
+}

@@ -1,0 +1,14 @@
+{
+  "Activated": true,
+  "Brief": "",
+  "Description":"Inspection of product label quality on the Seiler 2 system at the MAHLE Mühlackerplant",
+  "DiskUsage":24160, 
+  "Manufacturer":"urobotsGmbH",
+  "ModuleDependencies":[],
+  "Name":"labelverifier",
+  "Status":"Running",
+  "Title":"LabelVerifier",
+  "Type":"VApp",
+  "Version":"0.0.5",
+  "Website":"http://192.168.0.2/vapps/labelverifier/website/index.html"
+}
