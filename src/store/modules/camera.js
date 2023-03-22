@@ -77,7 +77,7 @@ export const actions = {
   },
 
 
-  async deactivateVApp({commit, dispatch, getters}, queryInfo){
+  async deactivateVApp({dispatch}, queryInfo){
     console.log(queryInfo)
     try{
       const response = await axios.delete(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`)
