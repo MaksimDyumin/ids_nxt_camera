@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-container fluid>
+    <v-container>
       <Header></Header>
-      <SheetApps></SheetApps>
+      <SheetApps class="sheet-apps"></SheetApps>
     </v-container>
   </v-app>
 </template>
@@ -22,3 +22,9 @@ export default {
   }),
 };
 </script>
+
+<style>
+.sheet-apps{
+  margin-top: 70px;
+}
+</style>

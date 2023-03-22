@@ -4,7 +4,7 @@
     <v-row justify="space-around" v-for="cameraName in cameraNames" :key="cameraName">
       <v-col cols="12" md="12">
         <v-sheet class="pa-2 d-flex flex-column flex-md-row align-center" color="grey lighten-3">
-          <img class="avtar-img ml-2" :src="`http://${domain}/vapps/${listApps[cameraName].Name}/avatar`" alt="">
+          <img class="avtar-img ml-2" :src="`${domain}/vapps/${listApps[cameraName].Name}/avatar`" alt="">
           <h3 class="app-info ml-7">{{ listApps[cameraName].Title }}({{ listApps[cameraName].Version }})</h3>
           <v-spacer></v-spacer>
           <v-container class="d-flex flex-column flex-md-row">
@@ -53,12 +53,14 @@
 <script>
 import { ref } from 'vue';
 import { mapActions, mapGetters } from 'vuex';
+const production = 'http://' + window.location.hostname
+const dev = 'http://127.0.0.1:5000'
 
 export default {
 
   data: () => {
     return {
-      domain: window.location.hostname,  //window?.location?.hostname 'http://127.0.0.1:5000'
+      domain: production,
       dialog: false,
       cameraNames: [],
       cameraToDelete: {}
@@ -98,9 +100,7 @@ export default {
   watch: {
     listApps:{
       handler(newValue, oldValue) {
-        console.log('newValue',newValue)
         this.cameraNames = Object.keys(newValue)
-        console.log('this.cameraNames', this.cameraNames)
       },
       deep: true
     }

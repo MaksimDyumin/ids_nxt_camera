@@ -1,5 +1,5 @@
-<template>
-  <v-app-bar :elevation="2" color="grey">
+<template >
+  <v-app-bar app :elevation="2" color="grey">
     <v-app-bar-title>VAppManager</v-app-bar-title>
     <v-spacer></v-spacer>
     <v-btn @click="activateInvisibleInput">
@@ -11,12 +11,14 @@
 
 <script>
 import { mapActions } from 'vuex';
+const production = 'http://' + window.location.hostname
+const dev = 'http://127.0.0.1:5000'
 
 export default {
   data: () =>{
     return {
       file: {},
-      domain: window.location.hostname  //, 'http://127.0.0.1:5000'
+      domain: production
     }
   },
   methods: {

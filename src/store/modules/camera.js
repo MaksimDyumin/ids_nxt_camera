@@ -1,7 +1,6 @@
 import axios from "axios";
 export const namespaced = true;
 
-let domain = '127.0.0.1:5000'
 const installConfig = {
     headers: {
         'Content-Type': 'application/vapp',
@@ -9,7 +8,7 @@ const installConfig = {
 }
 
 export const state = {
-  listApps: {},
+  listApps: [],
   app: {},
 }
 
@@ -42,11 +41,9 @@ export const mutations = {
 
 export const actions = {
   async getListOfAllApps({commit}, queryInfo){
-    console.log(queryInfo)
     let listApps = {}
     try{
-      const allAppsList = await axios.get(`http://${queryInfo.domain}/vapps`)
-      // const allAppsList = await axios.get(`${domain}/vapps`)
+      const allAppsList = await axios.get(`${queryInfo.domain}/vapps`)
       listApps = allAppsList.data.Installed
     }catch(error){
       console.error(error)
@@ -57,8 +54,7 @@ export const actions = {
     let res = {}
     for (let appName of listApps){
       try {
-        const currentApp = await axios.get(`http://${queryInfo.domain}/vapps/${appName}`)
-        // const currentApp = await axios.get(`${domain}/vapps/${appName}`)
+        const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appName}`)
 
         res[appName] = currentApp.data
       } catch (error) {
@@ -72,8 +68,7 @@ export const actions = {
   async getVAppInfo({commit}, queryInfo){
     try{
       console.log(queryInfo)
-      const currentApp = await axios.get(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`)
-      // const currentApp = await axios.get(`${domain}/vapps/${queryInfo}`)
+      const currentApp = await axios.get(`/${queryInfo.domain}/vapps/${queryInfo.appName}`)
       commit("SET_APP", currentApp.data)
     }catch(e){
       console.error(e)
@@ -83,8 +78,7 @@ export const actions = {
 
   async activateVApp({commit, dispatch, getters}, queryInfo){
     try{
-      const response = await axios.put(`http://${queryInfo.domain}/vapps/activated/${queryInfo.appName}`, {})
-      // const response = await axios.put(`${domain}/vapps/activated/${queryInfo.appName}`, {})
+      const response = await axios.put(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`, {})
       await dispatch('getVAppInfo', queryInfo)
       commit('ADD_OR_UPDATE_APP', getters.app)
     }
@@ -97,8 +91,7 @@ export const actions = {
   async deactivateVApp({commit, dispatch, getters}, queryInfo){
     console.log(queryInfo)
     try{
-      const response = await axios.delete(`http://${queryInfo.domain}/vapps/activated/${queryInfo.appName}`)
-      // const response = await axios.delete(`${domain}/vapps/activated/${queryInfo.appName}`)
+      const response = await axios.delete(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`)
       await dispatch('getVAppInfo', queryInfo)
       commit('ADD_OR_UPDATE_APP', getters.app)
     }
@@ -108,7 +101,7 @@ export const actions = {
   },
 
 
-  async installVApp({commit, dispatch, getters}, queryInfo){
+  async installVApp({commit, dispatch}, queryInfo){
     console.log(queryInfo)
     try {
       let data = new File([ queryInfo.file ], queryInfo.file.name, { type: 'application/octet-stream' })
@@ -118,9 +111,7 @@ export const actions = {
       let appname = queryInfo.file.name;
       appname = appname.replace(" ", "_").replace(/[^A-Za-z0-9|_]/g, "")
 
-      const response = await axios.put(`http://${queryInfo.domain}/vapps/${appname}`, data, installConfig)
-
-      // const response = await axios.put(`${domain}/vapps/${queryInfo.appName}`, {neueVApp: queryInfo.file})
+      const response = await axios.put(`${queryInfo.domain}/vapps/${appname}`, data, installConfig)
 
       // await dispatch('getVAppInfo', queryInfo)
       // // const installedApp = getters.app
@@ -141,8 +132,7 @@ export const actions = {
   async deleteApp({commit}, queryInfo){
     console.log(queryInfo)
     try{
-      const response = await axios.put(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`, {}, installConfig)
-      // const response = await axios.put(`${domain}/vapps/${queryInfo.appName}`, {})
+      const response = await axios.put(`${queryInfo.domain}/vapps/${queryInfo.appName}`, {}, installConfig)
       commit('DELETE_APP', queryInfo.appName)
     }
     catch(e){
