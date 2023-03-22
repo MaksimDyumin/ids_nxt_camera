@@ -4,15 +4,19 @@
     <v-row justify="space-around" v-for="cameraName in cameraNames" :key="cameraName">
       <v-col cols="12" md="12">
         <v-sheet class="pa-2 d-flex flex-column flex-md-row align-center" color="grey lighten-3">
-          <img class="avtar-img ml-2" :src="`${domain}/vapps/${listApps[cameraName].Name}/avatar`" alt="">
+          <img class="avtar-img ml-2" :src="`http://${domain}/vapps/${listApps[cameraName].Name}/avatar`" alt="">
           <h3 class="app-info ml-7">{{ listApps[cameraName].Title }}({{ listApps[cameraName].Version }})</h3>
           <v-spacer></v-spacer>
           <v-container class="d-flex flex-column flex-md-row">
-            <v-btn @click="switchCamera(listApps[cameraName])" class="ml-5 mb-5 mb-md-0"
-              elevation="2">{{ listApps[cameraName].Activated ? 'Deactivated' : 'Activated' }}
+            <v-btn
+                @click="switchCamera(listApps[cameraName])"
+                class="ml-5 mb-5 mb-md-0"
+                :color="listApps[cameraName].Activated ? 'warning' : null"
+                elevation="2">
+                {{ listApps[cameraName].Activated ? 'Deactivate' : 'Activate' }}
             </v-btn>
 
-            <v-btn class="ml-5 mb-5 mb-md-0" color="primary" @click="openDeleteModelDialog(listApps[cameraName])">
+            <v-btn class="ml-5 mb-5 mb-md-0" color="warning" @click="openDeleteModelDialog(listApps[cameraName])">
               Uninstall
             </v-btn>
 
@@ -51,7 +55,7 @@ import { ref } from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  
+
   data: () => {
     return {
       domain: window.location.hostname,  //window?.location?.hostname 'http://127.0.0.1:5000'
@@ -98,7 +102,7 @@ export default {
         this.cameraNames = Object.keys(newValue)
         console.log('this.cameraNames', this.cameraNames)
       },
-      deep: true 
+      deep: true
     }
   },
   computed: {

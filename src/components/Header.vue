@@ -28,7 +28,7 @@ export default {
     },
     installVapp(){
       let file = this.$refs.invisibleInput.files[0]
-      const queryInfo = {file: file, domain: this.domain, appName: 'Что_здесь'}
+      const queryInfo = {file: file, domain: this.domain}
       this.installVApp(queryInfo)
       this.$refs.invisibleInput.value = null
     }
