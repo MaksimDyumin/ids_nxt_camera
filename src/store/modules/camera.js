@@ -1,7 +1,7 @@
 import axios from "axios";
 export const namespaced = true;
 
-let domain = 'http://127.0.0.1:5000'
+let domain = '127.0.0.1:5000'
 
 export const state = {
   listApps: {},
@@ -40,7 +40,7 @@ export const actions = {
     console.log(queryInfo)
     let listApps = {}
     try{
-      const allAppsList = await axios.get(`${queryInfo.domain}/vapps`)
+      const allAppsList = await axios.get(`http://${queryInfo.domain}/vapps`)
       // const allAppsList = await axios.get(`${domain}/vapps`)
       listApps = allAppsList.data.Installed
     }catch(error){
@@ -52,9 +52,9 @@ export const actions = {
     let res = {}
     for (let appName of listApps){
       try {
-        const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appName}`)
+        const currentApp = await axios.get(`http://${queryInfo.domain}/vapps/${appName}`)
         // const currentApp = await axios.get(`${domain}/vapps/${appName}`)
-        
+
         res[appName] = currentApp.data
       } catch (error) {
         console.error(error)
@@ -63,11 +63,11 @@ export const actions = {
     commit('SET_APPS', res)
   },
 
-  
+
   async getVAppInfo({commit}, queryInfo){
     try{
       console.log(queryInfo)
-      const currentApp = await axios.get(`${queryInfo.domain}/vapps/${queryInfo.appName}`)
+      const currentApp = await axios.get(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`)
       // const currentApp = await axios.get(`${domain}/vapps/${queryInfo}`)
       commit("SET_APP", currentApp.data)
     }catch(e){
@@ -78,7 +78,7 @@ export const actions = {
 
   async activateVApp({commit, dispatch, getters}, queryInfo){
     try{
-      const response = await axios.put(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`, {})
+      const response = await axios.put(`http://${queryInfo.domain}/vapps/activated/${queryInfo.appName}`, {})
       // const response = await axios.put(`${domain}/vapps/activated/${queryInfo.appName}`, {})
       await dispatch('getVAppInfo', queryInfo)
       commit('ADD_OR_UPDATE_APP', getters.app)
@@ -92,7 +92,7 @@ export const actions = {
   async deactivateVApp({commit, dispatch, getters}, queryInfo){
     console.log(queryInfo)
     try{
-      const response = await axios.delete(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`)
+      const response = await axios.delete(`http://${queryInfo.domain}/vapps/activated/${queryInfo.appName}`)
       // const response = await axios.delete(`${domain}/vapps/activated/${queryInfo.appName}`)
       await dispatch('getVAppInfo', queryInfo)
       commit('ADD_OR_UPDATE_APP', getters.app)
@@ -106,9 +106,9 @@ export const actions = {
   async installVApp({commit, dispatch, getters}, queryInfo){
     console.log(queryInfo)
     try{
-      const response = await axios.put(`${queryInfo.domain}/vapps/${queryInfo.appName}`, {neueVApp: queryInfo.file})
+      const response = await axios.put(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`, {neueVApp: queryInfo.file})
       // const response = await axios.put(`${domain}/vapps/${queryInfo.appName}`, {neueVApp: queryInfo.file})
-      
+
       // await dispatch('getVAppInfo', queryInfo)
       // // const installedApp = getters.app
       // // await commit('ADD_OR_UPDATE_APP', installedApp)
@@ -123,7 +123,7 @@ export const actions = {
   async deleteApp({commit}, queryInfo){
     console.log(queryInfo)
     try{
-      const response = await axios.put(`${queryInfo.domain}/vapps/${queryInfo.appName}`, {})
+      const response = await axios.put(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`, {})
       // const response = await axios.put(`${domain}/vapps/${queryInfo.appName}`, {})
       commit('DELETE_APP', queryInfo.appName)
     }
