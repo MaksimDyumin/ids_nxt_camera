@@ -7,7 +7,7 @@
           <img class="avtar-img ml-2" :src="`${domain}/vapps/${app.Name}/avatar`" alt="">
           <h3 class="app-info ml-7">{{ app.Title }}({{ app.Version }})</h3>
           <v-spacer></v-spacer>
-          <v-container class="d-flex flex-column flex-md-row">
+          <div class="d-flex flex-column flex-md-row">
             <v-btn
                 @click="switchCamera(app)"
                 class="ml-5 mb-5 mb-md-0"
@@ -23,7 +23,7 @@
             <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5" elevation="2">
               Website
             </v-btn>
-          </v-container>
+          </div>
         </v-sheet>
       </v-col>
     </v-row>
@@ -60,7 +60,7 @@ export default {
 
   data: () => {
     return {
-      domain: production,
+      domain: dev,
       dialog: false,
       cameraNames: [],
       cameraToDelete: {}

@@ -58,8 +58,7 @@ export const actions = {
 
   async getVAppInfo({commit}, queryInfo){
     try{
-      console.log(queryInfo)
-      const currentApp = await axios.get(`/${queryInfo.domain}/vapps/${queryInfo.appName}`)
+      const currentApp = await axios.get(`${queryInfo.domain}/vapps/${queryInfo.appName}`)
       commit("SET_APP", currentApp.data)
     }catch(e){
       console.error(e)
@@ -102,29 +101,27 @@ export const actions = {
 
       const response = await axios.put(`${queryInfo.domain}/vapps/${appname}`, data, installConfig)
 
-       
       let delay = 1000;
       let counter = 0
       let timerId = await setTimeout(async function tick() {
-        const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appname}`)
         timerId = setTimeout(tick, delay)
-        
-        if(currentApp.statusText == 'OK'){
+        const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appname}`)
+        .then(() => {
+          console.log(counter)
+          clearTimeout(timerId)
           console.log('Application installation success')
-          clearTimeout(timerId)
-        }
-        if (counter > 6) {
-          console.error('Application installation timeout exceeded')
-          clearTimeout(timerId)
-        }
-        counter++
-      }, 1000);
-      // ap: The camera need some time to complete the installation
-      // It is better to poll i.e. /vapps/appname for some time until it becomes alive
-      // and then update the list of apps.
-      // await new Promise(r => setTimeout(r, 5000))
-
-      await dispatch('getListOfAllApps', queryInfo)
+          dispatch('getListOfAllApps', queryInfo)
+        })
+        .catch(() => {
+          if (counter < 5) {
+            counter++
+          }
+          else{
+            console.error('Application installation timeout exceeded')
+            clearTimeout(timerId)
+          }
+        })
+      }, delay);
     }
     catch(e){
       console.error(e)
