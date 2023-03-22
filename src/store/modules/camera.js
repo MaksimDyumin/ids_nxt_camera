@@ -126,6 +126,11 @@ export const actions = {
       // // const installedApp = getters.app
       // // await commit('ADD_OR_UPDATE_APP', installedApp)
 
+      // ap: The camera need some time to complete the installation
+      // It is better to poll i.e. /vapps/appname for some time until it becomes alive
+      // and then update the list of apps.
+      await new Promise(r => setTimeout(r, 5000))
+
       await dispatch('getListOfAllApps', queryInfo)
     }
     catch(e){
