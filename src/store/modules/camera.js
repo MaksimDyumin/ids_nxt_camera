@@ -25,18 +25,9 @@ export const mutations = {
   SET_APPS(state, apps){
     state.listApps = apps
   },
-  DELETE_APP(state, appName){
-    delete state.listApps[appName]
-  },
-  ADD_OR_UPDATE_APP(state, app){
-    state.listApps[app.Name] = app
-  },
   SET_APP(state, app){
     state.app = app
   },
-  SET_STAUS_APP(state, appName){
-
-  }
 }
 
 export const actions = {
@@ -51,12 +42,12 @@ export const actions = {
     }
 
 
-    let res = {}
+    let res = []
     for (let appName of listApps){
       try {
         const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appName}`)
 
-        res[appName] = currentApp.data
+        res.push(currentApp.data)
       } catch (error) {
         console.error(error)
       }
@@ -79,8 +70,7 @@ export const actions = {
   async activateVApp({commit, dispatch, getters}, queryInfo){
     try{
       const response = await axios.put(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`, {})
-      await dispatch('getVAppInfo', queryInfo)
-      commit('ADD_OR_UPDATE_APP', getters.app)
+      await dispatch('getListOfAllApps', queryInfo)
     }
     catch(e){
       console.log(e)
@@ -92,8 +82,7 @@ export const actions = {
     console.log(queryInfo)
     try{
       const response = await axios.delete(`${queryInfo.domain}/vapps/activated/${queryInfo.appName}`)
-      await dispatch('getVAppInfo', queryInfo)
-      commit('ADD_OR_UPDATE_APP', getters.app)
+      await dispatch('getListOfAllApps', queryInfo)
     }
     catch(e){
       console.error(e)
@@ -113,14 +102,27 @@ export const actions = {
 
       const response = await axios.put(`${queryInfo.domain}/vapps/${appname}`, data, installConfig)
 
-      // await dispatch('getVAppInfo', queryInfo)
-      // // const installedApp = getters.app
-      // // await commit('ADD_OR_UPDATE_APP', installedApp)
-
+       
+      let delay = 1000;
+      let counter = 0
+      let timerId = await setTimeout(async function tick() {
+        const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appname}`)
+        timerId = setTimeout(tick, delay)
+        
+        if(currentApp.statusText == 'OK'){
+          console.log('Application installation success')
+          clearTimeout(timerId)
+        }
+        if (counter > 6) {
+          console.error('Application installation timeout exceeded')
+          clearTimeout(timerId)
+        }
+        counter++
+      }, 1000);
       // ap: The camera need some time to complete the installation
       // It is better to poll i.e. /vapps/appname for some time until it becomes alive
       // and then update the list of apps.
-      await new Promise(r => setTimeout(r, 5000))
+      // await new Promise(r => setTimeout(r, 5000))
 
       await dispatch('getListOfAllApps', queryInfo)
     }
@@ -129,11 +131,11 @@ export const actions = {
     }
   },
 
-  async deleteApp({commit}, queryInfo){
+  async deleteApp({dispatch}, queryInfo){
     console.log(queryInfo)
     try{
       const response = await axios.put(`${queryInfo.domain}/vapps/${queryInfo.appName}`, {}, installConfig)
-      commit('DELETE_APP', queryInfo.appName)
+      dispatch('getListOfAllApps', queryInfo)
     }
     catch(e){
       console.error(e)
