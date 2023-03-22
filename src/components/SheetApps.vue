@@ -8,16 +8,16 @@
             <h3 class="app-info ml-7">{{ app.Title }}({{ app.Version }})</h3>
             <v-spacer></v-spacer>
             <div class="btn-menu-container">
-              <v-btn @click="switchCamera(app)" class="ml-5 mb-5 mb-md-0" :color="app.Activated ? 'warning' : null"
+              <v-btn @click="switchCamera(app)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="app.Activated ? 'warning' : null"
                 elevation="2">
                 {{ app.Activated ? 'Deactivate' : 'Activate' }}
               </v-btn>
 
-              <v-btn class="ml-5 mb-5 mb-md-0" color="warning" @click="DeleteModelDialog(app)">
+              <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(app)">
                 Uninstall
               </v-btn>
 
-              <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5" elevation="2">
+              <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5 btn-menu" style="min-width: 127px;" elevation="2">
                 Website
               </v-btn>
             </div>
@@ -98,7 +98,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .avtar-img {
   width: 50px;
   height: 50px;
@@ -124,17 +124,21 @@ export default {
 
 
 .btn-menu-container {
-  width: 429px;
+  width: 460px;
   padding: 12px;
   margin-right: auto;
   margin-left: auto;
   display: flex;
 }
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 959px) {
   .btn-menu-container{
     width: 100%;
     flex-direction: column;
   }
+}
+
+.btn-menu{
+  min-width: 127px!important;
 }
 
 
