@@ -2,6 +2,11 @@ import axios from "axios";
 export const namespaced = true;
 
 let domain = '127.0.0.1:5000'
+const installConfig = {
+    headers: {
+        'Content-Type': 'application/vapp',
+    }
+}
 
 export const state = {
   listApps: {},
@@ -105,8 +110,16 @@ export const actions = {
 
   async installVApp({commit, dispatch, getters}, queryInfo){
     console.log(queryInfo)
-    try{
-      const response = await axios.put(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`, {neueVApp: queryInfo.file})
+    try {
+      let data = new File([ queryInfo.file ], queryInfo.file.name, { type: 'application/octet-stream' })
+
+      // Use filename to build an identifier.
+      // The identifier must start with a letter. Supported characters are lower case letters, numbers and "_".
+      let appname = queryInfo.file.name;
+      appname = appname.replace(" ", "_").replace(/[^A-Za-z0-9|_]/g, "")
+
+      const response = await axios.put(`http://${queryInfo.domain}/vapps/${appname}`, data, installConfig)
+
       // const response = await axios.put(`${domain}/vapps/${queryInfo.appName}`, {neueVApp: queryInfo.file})
 
       // await dispatch('getVAppInfo', queryInfo)
@@ -123,7 +136,7 @@ export const actions = {
   async deleteApp({commit}, queryInfo){
     console.log(queryInfo)
     try{
-      const response = await axios.put(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`, {})
+      const response = await axios.put(`http://${queryInfo.domain}/vapps/${queryInfo.appName}`, {}, installConfig)
       // const response = await axios.put(`${domain}/vapps/${queryInfo.appName}`, {})
       commit('DELETE_APP', queryInfo.appName)
     }
