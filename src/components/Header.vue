@@ -18,7 +18,7 @@ export default {
   data: () =>{
     return {
       file: {},
-      domain: dev
+      domain: production
     }
   },
   methods: {
