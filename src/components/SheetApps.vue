@@ -67,7 +67,7 @@ export default {
 
   data: () => {
     return {
-      domain: dev,
+      domain: production,
       dialog: false,
       headers: [
         { title: 'Name', text:'Name', value: 'Name' },
