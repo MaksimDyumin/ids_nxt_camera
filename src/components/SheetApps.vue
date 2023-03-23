@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="overflow: auto;" id="container-scroll">
     <TransitionGroup name="list" mode="out-in" tag="div">
       <v-row justify="space-around" v-for="app in listApps" :key="app.Name">
         <v-col cols="12" md="12">
@@ -8,8 +8,9 @@
             <h3 class="app-info ml-7">{{ app.Title }}({{ app.Version }})</h3>
             <v-spacer></v-spacer>
             <div class="btn-menu-container">
-              <v-btn @click="switchCamera(app)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="app.Activated ? 'warning' : null"
-                elevation="2">
+
+              <v-btn @click="switchCamera(app)" class="ml-5 mb-5 mb-md-0 btn-menu"
+                :color="app.Activated ? 'warning' : null" elevation="2">
                 {{ app.Activated ? 'Deactivate' : 'Activate' }}
               </v-btn>
 
@@ -17,7 +18,7 @@
                 Uninstall
               </v-btn>
 
-              <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5 btn-menu" style="min-width: 127px;" elevation="2">
+              <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5 btn-menu" elevation="2">
                 Website
               </v-btn>
             </div>
@@ -40,6 +41,7 @@
           <v-btn color="red darken-1" text @click="deleteApp(cameraToDelete)">
             Delete
           </v-btn>
+          
 
         </v-card-actions>
       </v-card>
@@ -82,18 +84,18 @@ export default {
       await this.deleteAppVuex(queryInfo)
     },
     switchCamera(camera) {
-      if (camera.Activated) {
-        this.deactivateVApp({ domain: this.domain, appName: camera.Name })
-      }
-      else {
-        this.activateVApp({ domain: this.domain, appName: camera.Name })
-      }
+    if (camera.Activated) {
+      this.deactivateVApp({ domain: this.domain, appName: camera.Name })
     }
-  },
-  computed: {
+    else {
+      this.activateVApp({ domain: this.domain, appName: camera.Name })
+    }
+  }
+},
+computed: {
     ...mapGetters({
-      listApps: 'camera/listApps',
-    }),
+  listApps: 'camera/listApps',
+}),
   },
 }
 </script>
@@ -130,16 +132,15 @@ export default {
   margin-left: auto;
   display: flex;
 }
+
 @media screen and (max-width: 959px) {
-  .btn-menu-container{
+  .btn-menu-container {
     width: 100%;
     flex-direction: column;
   }
 }
 
-.btn-menu{
-  min-width: 127px!important;
+.btn-menu {
+  min-width: 127px !important;
 }
-
-
 </style>

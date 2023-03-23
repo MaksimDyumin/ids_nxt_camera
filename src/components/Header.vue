@@ -28,11 +28,12 @@ export default {
     activateInvisibleInput() {
       this.$refs.invisibleInput.click()
     },
-    installVapp(){
+    async installVapp(){
       let file = this.$refs.invisibleInput.files[0]
       const queryInfo = {file: file, domain: this.domain}
-      this.installVApp(queryInfo)
+      await this.installVApp(queryInfo)
       this.$refs.invisibleInput.value = null
+      window.scrollTo(0, document.body.scrollHeight)
     }
   }
 }

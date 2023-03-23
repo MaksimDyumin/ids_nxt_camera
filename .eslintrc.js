@@ -17,6 +17,7 @@ module.exports = {
     'vue/multi-word-component-names': 0,
     'vue/no-side-effects-in-computed-properties': 0,
     'no-unused-vars': 0,
-    'vue/valid-v-for': 0
+    'vue/valid-v-for': 0,
+    'no-constant-condition': 0
   }
 }
