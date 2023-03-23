@@ -18,6 +18,8 @@ module.exports = {
     'vue/no-side-effects-in-computed-properties': 0,
     'no-unused-vars': 0,
     'vue/valid-v-for': 0,
-    'no-constant-condition': 0
+    'no-constant-condition': 0,
+    'vue/valid-v-slot': 0,
+    'vue/no-v-model-argument': 0
   }
 }

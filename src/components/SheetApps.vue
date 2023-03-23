@@ -1,31 +1,41 @@
 <template>
   <v-container style="overflow: auto;" id="container-scroll">
-    <TransitionGroup name="list" mode="out-in" tag="div">
-      <v-row justify="space-around" v-for="app in listApps" :key="app.Name">
-        <v-col cols="12" md="12">
-          <v-sheet class="pa-2 d-flex flex-column flex-md-row align-center" color="grey lighten-3">
-            <img class="avtar-img ml-2" :src="`${domain}/vapps/${app.Name}/avatar`" alt="">
-            <h3 class="app-info ml-7">{{ app.Title }}({{ app.Version }})</h3>
-            <v-spacer></v-spacer>
-            <div class="btn-menu-container">
+    <v-data-table
+      :headers="headers"
+      :items="listApps"
+      
+      class="elevation-1">
+      <template v-slot:item.Name="{ item }">
+        <v-img 
+        :src="`${domain}/vapps/${item}/avatar`"
+        width="70"
+        height="70"
+        class="pa-1"
+        ></v-img>
+      </template>
 
-              <v-btn @click="switchCamera(app)" class="ml-5 mb-5 mb-md-0 btn-menu"
-                :color="app.Activated ? 'warning' : null" elevation="2">
-                {{ app.Activated ? 'Deactivate' : 'Activate' }}
-              </v-btn>
+      <template v-slot:item.Title="{ item }">
+        {{ item.Title }}({{ item.Version }})
+      </template>
 
-              <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(app)">
-                Uninstall
-              </v-btn>
+      <template v-slot:item.Type="{ item }">
+        <v-btn @click="switchCamera(item)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="item.Activated ? 'warning' : null"
+          elevation="2">
+          {{ item.Activated ? 'Deactivate' : 'Activate' }}
+        </v-btn>
 
-              <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5 btn-menu" elevation="2">
-                Website
-              </v-btn>
-            </div>
-          </v-sheet>
-        </v-col>
-      </v-row>
-    </TransitionGroup>
+        <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(item)">
+          Uninstall
+        </v-btn>
+
+        <v-btn :href="item.Website" target="_blank" v-if="item.Website" class="ml-5 btn-menu" style="min-width: 127px;" elevation="2">
+          Website
+        </v-btn>
+      </template>
+      
+    </v-data-table>
+
+    
 
     <v-dialog v-model="dialog" width="auto">
       <v-card>
@@ -42,7 +52,6 @@
             Delete
           </v-btn>
           
-
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -60,7 +69,11 @@ export default {
     return {
       domain: dev,
       dialog: false,
-      cameraNames: [],
+      headers: [
+        { title: 'Name', text:'Name', value: 'Name' },
+        { title: 'Title', text:'Title', value: 'Title' },
+        { title: 'Actions', text: 'Actions', value: 'Type' },
+      ],
       cameraToDelete: {}
     }
   },
