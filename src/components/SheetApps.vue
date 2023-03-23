@@ -15,7 +15,7 @@
       </template>
 
       <template v-slot:item.Title="{ item }">
-        {{ item.Title }}({{ item.Version }})
+        <h3>{{ item.Title }}({{ item.Version }})</h3>
       </template>
 
       <template v-slot:item.Type="{ item }">
