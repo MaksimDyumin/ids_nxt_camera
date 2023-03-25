@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-container>
-      <Header></Header>
-      <SheetApps class="mt-15"></SheetApps>
-    </v-container>
+    <Header></Header>
+     <v-content>
+      <SheetApps></SheetApps>
+     </v-content>
   </v-app>
 </template>
 
