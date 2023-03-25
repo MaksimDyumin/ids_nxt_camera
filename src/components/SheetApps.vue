@@ -4,34 +4,32 @@
       :headers="headers"
       :items="listApps"
       disable-pagination
+      disable-sort
       hide-default-footer
       class="elevation-0">
-      <template v-slot:item.Name="{ item }">
-        <v-img
-        :src="`${domain}/vapps/${item}/avatar`"
-        width="70"
-        height="70"
-        class="pa-1"
-        ></v-img>
-      </template>
-
-      <template v-slot:item.Title="{ item }">
-        <h3>{{ item.Title }}({{ item.Version }})</h3>
-      </template>
-
-      <template v-slot:item.Type="{ item }">
-        <v-btn @click="switchCamera(item)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="item.Activated ? 'warning' : null"
-          elevation="2">
-          {{ item.Activated ? 'Deactivate' : 'Activate' }}
-        </v-btn>
-
-        <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(item)">
-          Uninstall
-        </v-btn>
-
-        <v-btn :href="item.Website" target="_blank" v-if="item.Website" class="ml-5 btn-menu" style="min-width: 127px;" elevation="2">
-          Website
-        </v-btn>
+      <template slot="item" slot-scope="props">
+        <tr>
+            <td>
+                <div style="display:flex;align-items:center">
+                    <img
+                        :src="`${domain}/vapps/${props.item.Name}/avatar`"
+                        style="width:64px;height:64px"
+                        class="mr-3 my-1"/>
+                    <h3>{{ `${props.item.Title} (${props.item.Version})` }}</h3>
+                </div>
+            </td>
+            <td>
+                <v-btn @click="switchCamera(props.item)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="props.item.Activated ? 'warning' : null">
+                    {{ props.item.Activated ? 'Deactivate' : 'Activate' }}
+                </v-btn>
+                <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(props.item)">
+                    Uninstall
+                </v-btn>
+                <v-btn :href="props.item.Website" target="_blank" v-if="props.item.Website" class="ml-5 btn-menu" style="min-width: 127px;">
+                    Website
+                </v-btn>
+            </td>
+        </tr>
       </template>
 
     </v-data-table>
@@ -71,9 +69,8 @@ export default {
       domain: production,
       dialog: false,
       headers: [
-        { title: 'Name', text:'Name', value: 'Name' },
-        { title: 'Title', text:'Title', value: 'Title' },
-        { title: 'Actions', text: 'Actions', value: 'Type' },
+        { text: 'Title' },
+        { text: 'Actions' },
       ],
       cameraToDelete: {}
     }
