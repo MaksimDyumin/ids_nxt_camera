@@ -3,10 +3,11 @@
     <v-data-table
       :headers="headers"
       :items="listApps"
-      
-      class="elevation-1">
+      disable-pagination
+      hide-default-footer
+      class="elevation-0">
       <template v-slot:item.Name="{ item }">
-        <v-img 
+        <v-img
         :src="`${domain}/vapps/${item}/avatar`"
         width="70"
         height="70"
@@ -32,10 +33,10 @@
           Website
         </v-btn>
       </template>
-      
+
     </v-data-table>
 
-    
+
 
     <v-dialog v-model="dialog" width="auto">
       <v-card>
@@ -51,7 +52,7 @@
           <v-btn color="red darken-1" text @click="deleteApp(cameraToDelete)">
             Delete
           </v-btn>
-          
+
         </v-card-actions>
       </v-card>
     </v-dialog>
