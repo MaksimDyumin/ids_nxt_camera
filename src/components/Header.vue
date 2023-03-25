@@ -1,6 +1,6 @@
 <template >
   <v-app-bar app :elevation="2" color="grey">
-    <v-app-bar-title>VAppManager</v-app-bar-title>
+    <v-app-bar-title>VApp-Manager</v-app-bar-title>
     <v-spacer></v-spacer>
     <v-btn @click="activateInvisibleInput">
       install new app
