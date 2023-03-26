@@ -1,5 +1,7 @@
 import axios from "axios";
 export const namespaced = true;
+import {retryOperation} from '@/common/retry'
+import { unzip } from 'unzipit'
 
 const installConfig = {
     headers: {
@@ -94,34 +96,30 @@ export const actions = {
     try {
       let data = new File([ queryInfo.file ], queryInfo.file.name, { type: 'application/octet-stream' })
 
-      // Use filename to build an identifier.
+      // Fallback: use filename to build an identifier.
       // The identifier must start with a letter. Supported characters are lower case letters, numbers and "_".
       let appname = queryInfo.file.name;
       appname = appname.replace(" ", "_").replace(/[^A-Za-z0-9|_]/g, "")
 
+      // Try to extract appname from the archive
+      try {
+            const enc = new TextDecoder("utf-8")
+            const {entries} = await unzip(queryInfo.file)
+            const infoBuffer = await entries["vapp.info"].arrayBuffer()
+            const info = JSON.parse(enc.decode(infoBuffer))
+            appname = info.Description.Identifier
+      }
+      catch (e) {
+        console.log('Failed to extract vapp.info from the archive', e)
+      }
+
+      console.log('VApp identifier: ' + appname)
+
       const response = await axios.put(`${queryInfo.domain}/vapps/${appname}`, data, installConfig)
 
-      let delay = 1000;
-      let counter = 0
-      let timerId = await setTimeout(async function tick() {
-        timerId = setTimeout(tick, delay)
-        const currentApp = await axios.get(`${queryInfo.domain}/vapps/${appname}`)
-        .then(() => {
-          console.log(counter)
-          clearTimeout(timerId)
-          console.log('Application installation success')
-          dispatch('getListOfAllApps', queryInfo)
-        })
-        .catch(() => {
-          if (counter < 5) {
-            counter++
-          }
-          else{
-            console.error('Application installation timeout exceeded')
-            clearTimeout(timerId)
-          }
-        })
-      }, delay);
+      let url = `${queryInfo.domain}/vapps/${appname}`
+      await retryOperation(axios.get, url, 5)
+      await dispatch('getListOfAllApps', queryInfo)
     }
     catch(e){
       console.error(e)

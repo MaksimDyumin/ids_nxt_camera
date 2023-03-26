@@ -1,8 +1,8 @@
 <template >
-  <v-app-bar app :elevation="2" color="grey">
-    <v-app-bar-title>VAppManager</v-app-bar-title>
+  <v-app-bar app :elevation="2">
+    <v-app-bar-title>VApp-Manager</v-app-bar-title>
     <v-spacer></v-spacer>
-    <v-btn @click="activateInvisibleInput">
+    <v-btn @click="activateInvisibleInput" color="primary">
       install new app
     </v-btn>
     <input @change="installVapp" class="invisible-input" type="file" ref="invisibleInput">
@@ -18,7 +18,7 @@ export default {
   data: () =>{
     return {
       file: {},
-      domain: dev
+      domain: production
     }
   },
   methods: {
@@ -28,11 +28,12 @@ export default {
     activateInvisibleInput() {
       this.$refs.invisibleInput.click()
     },
-    installVapp(){
+    async installVapp(){
       let file = this.$refs.invisibleInput.files[0]
       const queryInfo = {file: file, domain: this.domain}
-      this.installVApp(queryInfo)
+      await this.installVApp(queryInfo)
       this.$refs.invisibleInput.value = null
+      window.scrollTo(0, document.body.scrollHeight)
     }
   }
 }

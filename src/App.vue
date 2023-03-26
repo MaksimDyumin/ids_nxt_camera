@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-container>
-      <Header></Header>
-      <SheetApps class="sheet-apps"></SheetApps>
-    </v-container>
+    <Header></Header>
+     <v-main>
+      <SheetApps></SheetApps>
+     </v-main>
   </v-app>
 </template>
 
@@ -16,15 +16,5 @@ export default {
   components: {
     Header, SheetApps
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>
-
-<style>
-.sheet-apps{
-  margin-top: 70px;
-}
-</style>

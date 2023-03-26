@@ -1,30 +1,40 @@
 <template>
-  <v-container>
-    <TransitionGroup name="list" mode="out-in" tag="div">
-      <v-row justify="space-around" v-for="app in listApps" :key="app.Name">
-        <v-col cols="12" md="12">
-          <v-sheet class="pa-2 d-flex flex-column flex-md-row align-center" color="grey lighten-3">
-            <img class="avtar-img ml-2" :src="`${domain}/vapps/${app.Name}/avatar`" alt="">
-            <h3 class="app-info ml-7">{{ app.Title }}({{ app.Version }})</h3>
-            <v-spacer></v-spacer>
-            <div class="btn-menu-container">
-              <v-btn @click="switchCamera(app)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="app.Activated ? 'warning' : null"
-                elevation="2">
-                {{ app.Activated ? 'Deactivate' : 'Activate' }}
-              </v-btn>
+  <v-container style="overflow: auto;" id="container-scroll">
+    <v-data-table
+      :headers="headers"
+      :items="listApps"
+      disable-pagination
+      disable-sort
+      hide-default-footer
+      class="elevation-0">
+      <template slot="item" slot-scope="props">
+        <tr>
+            <td>
+                <div style="display:flex;align-items:center">
+                    <img
+                        :src="`${domain}/vapps/${props.item.Name}/avatar`"
+                        style="width:64px;height:64px"
+                        class="mr-3 my-1"/>
+                    <h3>{{ `${props.item.Title} (${props.item.Version})` }}</h3>
+                </div>
+            </td>
+            <td>
+                <v-btn @click="switchCamera(props.item)" class="ml-5 mb-5 mb-md-0 btn-menu" :color="props.item.Activated ? 'warning' : null">
+                    {{ props.item.Activated ? 'Deactivate' : 'Activate' }}
+                </v-btn>
+                <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(props.item)">
+                    Uninstall
+                </v-btn>
+                <v-btn :href="props.item.Website" target="_blank" v-if="props.item.Website" class="ml-5 btn-menu" style="min-width: 127px;">
+                    Website
+                </v-btn>
+            </td>
+        </tr>
+      </template>
 
-              <v-btn class="ml-5 mb-5 mb-md-0 btn-menu" color="warning" @click="DeleteModelDialog(app)">
-                Uninstall
-              </v-btn>
+    </v-data-table>
 
-              <v-btn :href="app.Website" target="_blank" v-if="app.Website" class="ml-5 btn-menu" style="min-width: 127px;" elevation="2">
-                Website
-              </v-btn>
-            </div>
-          </v-sheet>
-        </v-col>
-      </v-row>
-    </TransitionGroup>
+
 
     <v-dialog v-model="dialog" width="auto">
       <v-card>
@@ -56,9 +66,12 @@ export default {
 
   data: () => {
     return {
-      domain: dev,
+      domain: production,
       dialog: false,
-      cameraNames: [],
+      headers: [
+        { text: 'Title' },
+        { text: 'Actions' },
+      ],
       cameraToDelete: {}
     }
   },
@@ -82,18 +95,18 @@ export default {
       await this.deleteAppVuex(queryInfo)
     },
     switchCamera(camera) {
-      if (camera.Activated) {
-        this.deactivateVApp({ domain: this.domain, appName: camera.Name })
-      }
-      else {
-        this.activateVApp({ domain: this.domain, appName: camera.Name })
-      }
+    if (camera.Activated) {
+      this.deactivateVApp({ domain: this.domain, appName: camera.Name })
     }
-  },
-  computed: {
+    else {
+      this.activateVApp({ domain: this.domain, appName: camera.Name })
+    }
+  }
+},
+computed: {
     ...mapGetters({
-      listApps: 'camera/listApps',
-    }),
+  listApps: 'camera/listApps',
+}),
   },
 }
 </script>
@@ -130,16 +143,15 @@ export default {
   margin-left: auto;
   display: flex;
 }
+
 @media screen and (max-width: 959px) {
-  .btn-menu-container{
+  .btn-menu-container {
     width: 100%;
     flex-direction: column;
   }
 }
 
-.btn-menu{
-  min-width: 127px!important;
+.btn-menu {
+  min-width: 127px !important;
 }
-
-
 </style>
